@@ -1,17 +1,14 @@
-defmodule Day2InventoryManagementSystem do
+defmodule Day2InventoryManagementSystemPart1 do
   @moduledoc """
   Documentation for Day2InventoryManagementSystem.
   """
   alias Counter
 
-  def part_one(input_file) do
-    start_state = %Counter{}
-    # IO.puts("Counter has lines_read value: #{start_state.lines_read}")
-
+  def main(input_file) do
     final_state =
       File.stream!(input_file)
       |> Stream.map(&String.replace(&1, "\n", ""))
-      |> Enum.reduce(start_state, &count_chars/2)
+      |> Enum.reduce(%Counter{}, &count_chars/2)
 
     checksum = final_state.two_chars * final_state.three_chars
     IO.puts("Found #{final_state.two_chars} two-char sequences, #{final_state.three_chars} three-char sequences")
