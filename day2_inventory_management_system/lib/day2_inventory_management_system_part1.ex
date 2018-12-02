@@ -11,7 +11,11 @@ defmodule Day2InventoryManagementSystemPart1 do
       |> Enum.reduce(%Counter{}, &count_chars/2)
 
     checksum = final_state.two_chars * final_state.three_chars
-    IO.puts("Found #{final_state.two_chars} two-char sequences, #{final_state.three_chars} three-char sequences")
+
+    IO.puts(
+      "Found #{final_state.two_chars} two-char sequences, #{final_state.three_chars} three-char sequences"
+    )
+
     IO.puts("Checksum=#{checksum}")
     final_state
   end
