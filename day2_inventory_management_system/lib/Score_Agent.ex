@@ -20,7 +20,9 @@ defmodule ScoreAgent do
   end
 
   def set_score(new_score, string1, string2) do
-    Agent.update(@agent_name, fn struct -> %{ struct | score: new_score, string1: string1, string2: string2} end)
+    Agent.update(@agent_name, fn struct ->
+      %{struct | score: new_score, string1: string1, string2: string2}
+    end)
   end
 
   def debug_print_state() do

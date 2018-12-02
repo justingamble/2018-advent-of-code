@@ -2,8 +2,6 @@ defmodule Day2InventoryManagementSystemPart2 do
   @moduledoc """
   Documentation for Day2InventoryManagementSystem.
   """
-  alias Score
-
   def main(input_file) do
     lines =
       File.stream!(input_file)
@@ -35,10 +33,9 @@ defmodule Day2InventoryManagementSystemPart2 do
           score = String.jaro_distance(string1, string2)
           if score > ScoreAgent.get_score() do
               ScoreAgent.set_score(score, string1, string2)
-            end
           end
+        end
       end
     end
-#    IO.puts("Max score is.. #{ScoreAgent.debug_print_state()}")
   end
 end
