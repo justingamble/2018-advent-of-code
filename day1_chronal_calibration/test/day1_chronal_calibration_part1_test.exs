@@ -3,26 +3,22 @@ defmodule Day1ChronalCalibrationPart1Test do
   doctest Day1ChronalCalibration
 
   test "+1, +1, +1 results in 3" do
-    result =
-      ["+1", "+1", "+1"]
-      |> Enum.reduce(0, &Day1ChronalCalibration.sum/2)
-
-    assert(result == 3)
+    run_test(["+1", "+1", "+1"], 3)
   end
 
   test "+1, +1, -2 results in 0" do
-    result =
-      ["+1", "+1", "-2"]
-      |> Enum.reduce(0, &Day1ChronalCalibration.sum/2)
-
-    assert(result == 0)
+    run_test(["+1", "+1", "-2"], 0)
   end
 
   test "-1, -2, -3 results in -6" do
+    run_test(["-1", "-2", "-3"], -6)
+  end
+
+  defp run_test(input_list, expected_result) do
     result =
-      ["-1", "-2", "-3"]
+      input_list
       |> Enum.reduce(0, &Day1ChronalCalibration.sum/2)
 
-    assert(result == -6)
+    assert(result == expected_result)
   end
 end
