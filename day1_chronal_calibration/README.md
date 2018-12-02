@@ -5,14 +5,14 @@ https://adventofcode.com/2018/day/1
 
 ## Execution
 
-Ensure your directory contains a file 'input.txt'.  Then execute:
+Ensure your directory contains a file 'input.txt'.  For the first exercise, execute:
 
 ```
-$ mix
+$ mix part_one
 ```
 
-For executing the sample tests provided in the problem description:
+For the second exercise, execute:
 
 ```
-$ mix test
+$ mix part_two
 ```
