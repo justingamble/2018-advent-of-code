@@ -7,13 +7,14 @@ Solved using Elixir 1.7.3 (compiled with Erlang/OTP 21)
 
 ## Execution
 
-Ensure your directory contains a file 'input.txt'.  For the first exercise, execute:
+Ensure your directory contains a file 'input.txt'.  
+To solve the first exercise, execute:
 
 ```
 $ mix part_one
 ```
 
-For the second exercise, execute:
+To solve the second exercise, execute:
 
 ```
 $ mix part_two
