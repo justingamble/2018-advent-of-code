@@ -6,22 +6,32 @@ defmodule Day3 do
 
     import Input
 
-    def overlapped_squares(lines) do
-      lines
-      |> get_structured_input
-      |> get_all_coordinates_in_use
-      |> complete_matrix
-      |> Enum.filter(fn {_key, value} -> value == :conflict end)
-      |> Enum.count()
+    def single_claim(lines) do
+      matrix = lines
+        |> get_structured_input
+        |> get_all_coordinates_in_use
+        |> complete_matrix
+
+      all_claim_ids = matrix
+        |> Enum.reduce(%MapSet{}, fn {key, _value}, acc -> MapSet.put(acc, key) end)
+      IO.inspect(all_claim_ids, label: "all_claim_ids")
+#      |> Enum.filter(fn {_key, value} -> value == :conflict end)
     end
 
     def complete_matrix(coordinates) do
       matrix = coordinates
-               |> Enum.reduce(%{}, fn coordinate, m ->
-                    Map.update(m, coordinate, :ok, fn _ -> :conflict end)
+               |> Enum.reduce(%{}, fn {claim_id, x, y}, map_acc ->
+                    Map.update(map_acc, {x,y}, {:ok, [claim_id]}, fn prev -> merge_claim_ids(prev, claim_id) end)
                   end)
       IO.inspect(matrix, label: "matrix")
       matrix
+    end
+
+    def merge_claim_ids(old, new) do
+      case old do
+        {:ok, [tail]} -> {:conflict, [new | tail]}
+        {:conflict, [tail]} -> {:conflict, [new | tail]}
+      end
     end
 
     def get_structured_input(lines) do
@@ -50,11 +60,11 @@ defmodule Day3 do
       |> List.flatten
     end
 
-    def convert_to_coordinates(%Input{x: x, y: y, length: length, height: height}) do
+    def convert_to_coordinates(%Input{claim_id: claim_id, x: x, y: y, length: length, height: height}) do
         right_x = x + length - 1
         bottom_y = y + height - 1
         for row <- x..right_x, column <- y..bottom_y do
-          {row, column}
+          {claim_id, row, column}
         end
     end
 
@@ -80,7 +90,7 @@ case System.argv() do
   [input_file] ->
     input_file
     |> File.read!()
-    |> Day3.overlapped_squares()
+    |> Day3.single_claim()
     |> IO.inspect(label: "Final answer")
 
 #  _ -> IO.puts :stderr, "we expected --test or an input file"
