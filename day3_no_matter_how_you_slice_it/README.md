@@ -1,4 +1,4 @@
-# Day3NoMatterHowYouSliceIt
+# Day 3 - No Matter How You Slice It
 
 Puzzle:
 https://adventofcode.com/2018/day/3
