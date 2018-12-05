@@ -19,46 +19,17 @@ defmodule Day3 do
 
     conflict_claim_ids =
       matrix
-      |> Enum.filter(fn {_k, v} ->
-        case v do
-          {:conflict, _} -> true
-          _ -> false
-        end
-      end)
+      |> Enum.filter(fn {_k, v} -> include_only_conflict_rows(v) end)
       |> Enum.reduce(%MapSet{}, fn {_k, v}, acc ->
-        {:conflict, list} = v
-
-        new_mapset =
-          list
-          |> Enum.reduce(%MapSet{}, fn elem, acc2 ->
-            MapSet.put(acc2, elem)
-          end)
-
-        MapSet.union(acc, new_mapset)
+        combine_all_list_entries_into_mapset(v, acc)
       end)
 
-    sole_survivor = MapSet.difference(all_claim_ids, conflict_claim_ids)
-    list = MapSet.to_list(sole_survivor)
-    {x, []} = List.pop_at(list, 0)
-    x
-  end
+    {sole_survivor, []} =
+      MapSet.difference(all_claim_ids, conflict_claim_ids)
+      |> MapSet.to_list()
+      |> List.pop_at(0)
 
-  def complete_matrix(coordinates) do
-    _matrix =
-      coordinates
-      |> Enum.reduce(%{}, fn {claim_id, x, y}, map_acc ->
-        Map.update(map_acc, {x, y}, {:ok, [claim_id]}, fn prev ->
-          merge_claim_ids(prev, claim_id)
-        end)
-      end)
-  end
-
-  def merge_claim_ids(old, new) do
-    case old do
-      {:ok, list} -> {:conflict, [new | list]}
-      {:conflict, list} -> {:conflict, [new | list]}
-      _ -> raise "ERROR: 'old' (#{inspect(old)}) not matched"
-    end
+    sole_survivor
   end
 
   def get_structured_input(lines) do
@@ -103,6 +74,41 @@ defmodule Day3 do
     for row <- x..right_x, column <- y..bottom_y do
       {claim_id, row, column}
     end
+  end
+
+  def complete_matrix(coordinates) do
+    _matrix =
+      coordinates
+      |> Enum.reduce(%{}, fn {claim_id, x, y}, map_acc ->
+        Map.update(map_acc, {x, y}, {:ok, [claim_id]}, fn prev ->
+          merge_claim_ids(prev, claim_id)
+        end)
+      end)
+  end
+
+  def merge_claim_ids(old, new) do
+    case old do
+      {:ok, list} -> {:conflict, [new | list]}
+      {:conflict, list} -> {:conflict, [new | list]}
+      _ -> raise "ERROR: 'old' (#{inspect(old)}) not matched"
+    end
+  end
+
+  def include_only_conflict_rows(value) do
+    case value do
+      {:conflict, _} -> true
+      _ -> false
+    end
+  end
+
+  def combine_all_list_entries_into_mapset({:conflict, list}, mapset) do
+    new_mapset =
+      list
+      |> Enum.reduce(%MapSet{}, fn elem, acc ->
+        MapSet.put(acc, elem)
+      end)
+
+    MapSet.union(mapset, new_mapset)
   end
 end
 
