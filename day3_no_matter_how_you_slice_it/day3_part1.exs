@@ -14,17 +14,6 @@ defmodule Day3 do
     |> Enum.count()
   end
 
-  def complete_matrix(coordinates) do
-    matrix =
-      coordinates
-      |> Enum.reduce(%{}, fn coordinate, m ->
-        Map.update(m, coordinate, :ok, fn _ -> :conflict end)
-      end)
-
-    IO.inspect(matrix, label: "matrix")
-    matrix
-  end
-
   def get_structured_input(lines) do
     lines
     |> String.split("\n", trim: true)
@@ -52,6 +41,17 @@ defmodule Day3 do
     list_of_structs
     |> Enum.map(&convert_to_coordinates/1)
     |> List.flatten()
+  end
+
+  def complete_matrix(coordinates) do
+    matrix =
+      coordinates
+      |> Enum.reduce(%{}, fn coordinate, m ->
+        Map.update(m, coordinate, :ok, fn _ -> :conflict end)
+      end)
+
+    IO.inspect(matrix, label: "matrix")
+    matrix
   end
 
   def convert_to_coordinates(%Input{x: x, y: y, length: length, height: height}) do
