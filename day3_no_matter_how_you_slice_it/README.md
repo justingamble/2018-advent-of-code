@@ -17,7 +17,7 @@ $ elixir day3_part1.exs input.txt
 To solve the second exercise, execute:
 
 ```
-$ mix part_two
+$ elixir day3_part2.exs input.txt
 ```
 
 ## Puzzle Details
