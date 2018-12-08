@@ -1,4 +1,4 @@
-defmodule Day5AlchemicalReaction do
+defmodule Day5AlchemicalReactionPartOne do
   def main(input_file) do
     answer = File.read!(input_file)
       |> String.split("\n", trim: true)
