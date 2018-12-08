@@ -8,21 +8,6 @@ defmodule Day5AlchemicalReactionPartTwo do
     |> IO.inspect(label: "Final answer")
   end
 
-  def get_length_of_best_sequence_removal(list_of_polymer_sequences)
-      when is_list(list_of_polymer_sequences) do
-    list_of_polymer_sequences
-    |> Enum.map(fn sequence ->
-      Task.async(Day5AlchemicalReactionPartTwo, :get_polymer_length, [sequence])
-    end)
-    |> Enum.map(&Task.await(&1, :infinity))
-    |> Enum.min()
-  end
-
-  def get_polymer_length(input_string) do
-    find_shortest_polymer(input_string)
-    |> String.length()
-  end
-
   def get_list_of_polymer_sequences(input_string) when is_binary(input_string) do
     for char <- ?a..?z do
       new_string = remove_unit(input_string, char)
@@ -52,6 +37,21 @@ defmodule Day5AlchemicalReactionPartTwo do
 
   def remove_unit(char_list, char_to_remove) when char_to_remove in ?A..?z do
     remove_unit(char_list, List.to_string([char_to_remove]))
+  end
+
+  def get_length_of_best_sequence_removal(list_of_polymer_sequences)
+      when is_list(list_of_polymer_sequences) do
+    list_of_polymer_sequences
+    |> Enum.map(fn sequence ->
+      Task.async(Day5AlchemicalReactionPartTwo, :get_polymer_length, [sequence])
+    end)
+    |> Enum.map(&Task.await(&1, :infinity))
+    |> Enum.min()
+  end
+
+  def get_polymer_length(input_string) do
+    find_shortest_polymer(input_string)
+    |> String.length()
   end
 
   def find_shortest_polymer(string) do
