@@ -1,12 +1,57 @@
-defmodule Day5AlchemicalReactionPartOne do
+defmodule Day5AlchemicalReactionPartTwo do
   def main(input_file) do
-    answer =
-      File.read!(input_file)
-      |> String.split("\n", trim: true)
-      |> Enum.at(0)
-      |> find_shortest_polymer
+    File.read!(input_file)
+    |> String.split("\n", trim: true)
+    |> Enum.at(0)
+    |> get_list_of_polymer_sequences()
+    |> get_length_of_best_sequence_removal()
+    |> IO.inspect(label: "Final answer")
+  end
 
-    IO.puts("Final answer: #{String.length(answer)}")
+  def get_length_of_best_sequence_removal(list_of_polymer_sequences)
+      when is_list(list_of_polymer_sequences) do
+    list_of_polymer_sequences
+    |> Enum.map(fn sequence ->
+      Task.async(Day5AlchemicalReactionPartTwo, :get_polymer_length, [sequence])
+    end)
+    |> Enum.map(&Task.await(&1, :infinity))
+    |> Enum.min()
+  end
+
+  def get_polymer_length(input_string) do
+    find_shortest_polymer(input_string)
+    |> String.length()
+  end
+
+  def get_list_of_polymer_sequences(input_string) when is_binary(input_string) do
+    for char <- ?a..?z do
+      new_string = remove_unit(input_string, char)
+      new_string
+    end
+  end
+
+  def remove_unit(binary, char_to_remove) when is_binary(binary) and char_to_remove in ?A..?z do
+    char_list = String.to_charlist(binary)
+
+    updated_list =
+      Enum.reject(char_list, fn x ->
+        test_char = List.to_string([x])
+        string_char_to_remove = List.to_string([char_to_remove])
+        String.equivalent?(String.upcase(test_char), String.upcase(string_char_to_remove))
+      end)
+
+    List.to_string(updated_list)
+  end
+
+  def remove_unit(char_list, char_to_remove) when is_binary(char_to_remove) do
+    Enum.reject(char_list, fn x ->
+      test_char = List.to_string([x])
+      String.equivalent?(String.upcase(test_char), String.upcase(char_to_remove))
+    end)
+  end
+
+  def remove_unit(char_list, char_to_remove) when char_to_remove in ?A..?z do
+    remove_unit(char_list, List.to_string([char_to_remove]))
   end
 
   def find_shortest_polymer(string) do
